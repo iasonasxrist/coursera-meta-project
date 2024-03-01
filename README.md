@@ -1,6 +1,6 @@
-# Little Lemon Restaurant Management System
+# LittleDB System
 
-- [Little Lemon Restaurant Management System](#little-lemon-restaurant-management-system)
+- [Little Lemon Restaurant Management System](#LittleDB System)
   - [Project Description](#project-description)
   - [Entity-Relationship Diagram](#entity-relationship-diagram)
   - [Installation and Setup](#installation-and-setup)
