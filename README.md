@@ -35,12 +35,12 @@ To set up the database, do the following:
 
 1. **Install MySQL**: Download and install MySQL on your machine if you haven't done so.
 
-2. **Download SQL File**: Obtain the [LittleLemonDB.sql](./LittleLemonDB.sql) file from this repository.
+2. **Download SQL File**: Obtain the [LittleDB.sql](./LittleDB.sql) file from this repository.
 
 3. **Import and Execute in MySQL Workbench**:
     - Open MySQL Workbench.
     - Navigate to `Server` > `Data Import`.
-    - Choose `Import from Self-Contained File` and load the `LittleLemonDB.sql` file.
+    - Choose `Import from Self-Contained File` and load the `LittleDB.sql` file.
     - Click `Start Import` to both import and execute the SQL commands from the file.
 
 Your database should now be set up and populated with tables and stored procedures.
@@ -55,7 +55,7 @@ CREATE PROCEDURE GetMaxQuantity()
 BEGIN
   DECLARE maxQty INT;
 
-  SELECT MAX(Quantity) INTO maxQty FROM `LittleLemonDB`.`Orders`;
+  SELECT MAX(Quantity) INTO maxQty FROM `littleDB`.`Orders`;
 
   SELECT maxQty AS 'Maximum Ordered Quantity';
 END;
@@ -70,12 +70,12 @@ CALL GetMaxQuantity()
 The CheckBooking stored procedure validates whether a table is already booked on a specified date. It will output a status message indicating whether the table is available or already booked.
 
 ```sql
-CREATE PROCEDURE `LittleLemonDB`.`CheckBooking`(IN booking_date DATE, IN table_number INT)
+CREATE PROCEDURE `LittleDB`.`CheckBooking`(IN booking_date DATE, IN table_number INT)
 BEGIN
     DECLARE table_status VARCHAR(50);
 
     SELECT COUNT(*) INTO @table_count
-    FROM `LittleLemonDB`.`Bookings`
+    FROM `littleDB`.`Bookings`
     WHERE `Date` = booking_date AND `TableNumber` = table_number;
 
     IF (@table_count > 0) THEN
@@ -95,11 +95,11 @@ CALL CheckBooking('2022-11-12', 3);
 This stored procedure updates the booking details in the database. It takes the booking ID and new booking date as parameters, making sure the changes are reflected in the system.
 
 ```sql
-CREATE PROCEDURE `LittleLemonDB`.`UpdateBooking`(
+CREATE PROCEDURE `LittleDB`.`UpdateBooking`(
     IN booking_id_to_update INT, 
     IN new_booking_date DATE)
 BEGIN
-    UPDATE `LittleLemonDB`.`Bookings`
+    UPDATE `LittleDB`.`Bookings`
     SET `Date` = new_booking_date
     WHERE `BookingID` = booking_id_to_update;
 
@@ -107,21 +107,21 @@ BEGIN
 END;
 ```
 ```sql
-CALL `LittleLemonDB`.`UpdateBooking`(9, '2022-11-15');
+CALL `LittleDB`.`UpdateBooking`(9, '2022-11-15');
 ```
 
 ### AddBooking() 
 This procedure adds a new booking to the system. It accepts multiple parameters like booking ID, customer ID, booking date, and table number to complete the process.
 
 ```sql
-CREATE PROCEDURE `LittleLemonDB`.`AddBooking`(
+CREATE PROCEDURE `LittleDB`.`AddBooking`(
     IN new_booking_id INT, 
     IN new_customer_id INT, 
     IN new_booking_date DATE, 
     IN new_table_number INT, 
     IN new_staff_id INT)
 BEGIN
-    INSERT INTO `LittleLemonDB`.`Bookings`(
+    INSERT INTO `LittleDB`.`Bookings`(
         `BookingID`, 
         `CustomerID`, 
         `Date`, 
@@ -139,41 +139,41 @@ BEGIN
 END;
 ```
 ```sql
-CALL `LittleLemonDB`.`AddBooking`(17, 1, '2022-10-10', 5, 2);
+CALL `LittleDB`.`AddBooking`(17, 1, '2022-10-10', 5, 2);
 ```
 
 ### CancelBooking()
 This stored procedure deletes a specific booking from the database, allowing for better management and freeing up resources.
 ```sql
-CREATE PROCEDURE `LittleLemonDB`.`CancelBooking`(IN booking_id_to_cancel INT)
+CREATE PROCEDURE `LittleDB`.`CancelBooking`(IN booking_id_to_cancel INT)
 BEGIN
-    DELETE FROM `LittleLemonDB`.`Bookings`
+    DELETE FROM `littleDB`.`Bookings`
     WHERE `BookingID` = booking_id_to_cancel;
 
     SELECT CONCAT('Booking ', booking_id_to_cancel, ' cancelled') AS 'Confirmation';
 END;
 ```
 ```sql
-CALL `LittleLemonDB`.`CancelBooking`(9);
+CALL `LittleDB`.`CancelBooking`(9);
 ```
 ### AddValidBooking()
 The AddValidBooking stored procedure aims to securely add a new table booking record. It starts a transaction and attempts to insert a new booking record, checking the table's availability.
 
 ```sql
-CREATE PROCEDURE `LittleLemonDB`.`AddValidBooking`(IN new_booking_date DATE, IN new_table_number INT, IN new_customer_id INT, IN new_staff_id INT)
+CREATE PROCEDURE `LittleDB`.`AddValidBooking`(IN new_booking_date DATE, IN new_table_number INT, IN new_customer_id INT, IN new_staff_id INT)
 BEGIN
     DECLARE table_status INT;
     START TRANSACTION;
 
     SELECT COUNT(*) INTO table_status
-    FROM `LittleLemonDB`.`Bookings`
+    FROM `littleDB`.`Bookings`
     WHERE `Date` = new_booking_date AND `TableNumber` = new_table_number;
 
     IF (table_status > 0) THEN
         ROLLBACK;
         SELECT 'Booking could not be completed. Table is already booked on the specified date.' AS 'Status';
     ELSE
-        INSERT INTO `LittleLemonDB`.`Bookings`(`Date`, `TableNumber`, `CustomerID`, `StaffID`)
+        INSERT INTO `LittleDB`.`Bookings`(`Date`, `TableNumber`, `CustomerID`, `StaffID`)
         VALUES(new_booking_date, new_table_number, new_customer_id, new_staff_id);
 
         COMMIT;
@@ -194,12 +194,12 @@ CREATE PROCEDURE CancelOrder(IN orderIDToDelete INT)
 BEGIN
   DECLARE orderExistence INT;
 
-  SELECT COUNT(*) INTO orderExistence FROM `LittleLemonDB`.`Orders` WHERE OrderID = orderIDToDelete;
+  SELECT COUNT(*) INTO orderExistence FROM `littleDB`.`Orders` WHERE OrderID = orderIDToDelete;
 
   IF orderExistence > 0 THEN
-    DELETE FROM `LittleLemonDB`.`OrderDeliveryStatuses` WHERE OrderID = orderIDToDelete;
+    DELETE FROM `littleDB`.`OrderDeliveryStatuses` WHERE OrderID = orderIDToDelete;
 
-    DELETE FROM `LittleLemonDB`.`Orders` WHERE OrderID = orderIDToDelete;
+    DELETE FROM `littleDB`.`Orders` WHERE OrderID = orderIDToDelete;
 
     SELECT CONCAT('Order ', orderIDToDelete, ' is cancelled') AS 'Confirmation';
   ELSE
