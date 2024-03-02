@@ -1,6 +1,6 @@
 # LittleDB Analysis for Sales 
 
-## Database Clients Project ### with Python 
+## Database Clients Project with Python 
 
 The following Software and Packages are installed for completing this project : 
 
