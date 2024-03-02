@@ -1,6 +1,6 @@
 # LittleDB Analysis for Sales 
 
-** Database Clients Project* wth Python **
+## Database Clients Project ### with Python 
 
 The following Software and Packages are installed for completing this project : 
 
@@ -13,7 +13,7 @@ The following Software and Packages are installed for completing this project :
 4. MySQL Connector/Python API
 
 
-## About the Project:**
+## About the Project:
 
 Little Lemon is a restaurant. They are developing a Python-based application that needs to connect with the MySQL database so that the booking, menu, and order data can be stored in the respective tables. 
 
@@ -37,7 +37,7 @@ Now that you have a connection and a cursor, create a new database LittleDB, and
 
 Create and populate the tables in the LittleDB database: MenuItems table, Menu table, Bookings table, Orders table, and Employees table.
 
-**Step 5: Implement and query stored procedures:**
+## Step 5: Implement and query stored procedures:
 
 Create a pool of connections and get a connection from the pool to implement the stored procedures to complete the following tasks:
 
